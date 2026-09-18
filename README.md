@@ -56,7 +56,7 @@ Click the badge above (this also works from the Home Assistant companion app), t
 ## Known limitations
 
 - Credential-open events reported with method `matter` are a confirmed artifact of how this lock's access log encodes certain internal/system events — they always carry a fixed placeholder identifier rather than a real credential, and are treated by this integration as non-attributable (they will not show up as a real person unlocking). This is intentional and was confirmed via direct protocol inspection.
-- Fingerprint/face credential-open attribution has had a history of edge cases across firmware/library versions; if a name mapping looks wrong for those specific methods, please open an issue with the raw `sensor.*_last_access_log_event` attributes attached (redact your own account/device details first).
+- Fixed (2026-09-18): every real fingerprint credential-open used to be mislabeled `face` (this integration's underlying protocol library special-cases that method based on a byte pattern that never matched on the tested lock/firmware). It's now corrected back to `fingerprint`. If a name mapping still looks wrong for `fingerprint`/`face`/any other method after updating, please open an issue with the raw `sensor.*_last_access_log_event` attributes attached (redact your own account/device details first).
 - This integration depends on a vendored copy of a separate, private protocol library for the low-level BLE/cloud protocol handling. It's bundled here so no external PyPI package is required, but it means protocol updates need to be re-vendored manually into new releases of this integration.
 
 ## Contributing / issues
