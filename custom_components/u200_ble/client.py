@@ -397,6 +397,23 @@ def _parse_last_unlock_event(entries: list) -> LastUnlockEvent | None:
             i, e.raw_attr, e.event_class, e.method, e.user_id, e.timestamp,
         )
     label = newest.method or newest.event_class
+    if label == "face":
+        # CONFIRMED 2026-09-18 via a live debug capture (same method as the
+        # 2026-09-17 "matter" fix above): aqara_ble.access_log's
+        # decode_lock_log_record() special-cases attr-hi 0x2 (which its own
+        # METHOD_BY_HI table calls "fingerprint") into "face" whenever
+        # user_id[4:8] != "0680". On this lock/firmware that check never
+        # once matches: every confirmed real fingerprint credential-open
+        # observed so far decodes to a user_id whose [4:8] slice is "0180",
+        # not "0680" -- so the vendored heuristic always falls through to
+        # "face", even for a plain fingerprint touch. This lock model has no
+        # face-recognition hardware at all, and no "face" label has ever
+        # corresponded to an actual face scan in testing, so -- exactly like
+        # the "matter" case above -- we correct a heuristic that has been
+        # live-disproven rather than propagate it. If a face-capable variant
+        # of this lock is ever confirmed to hit this path for real, this
+        # override needs to become conditional instead of unconditional.
+        label = "fingerprint"
     slot = _resolve_credential_slot(newest)
     is_open = newest.event_class == "credential_open"
     if newest.method == "matter":

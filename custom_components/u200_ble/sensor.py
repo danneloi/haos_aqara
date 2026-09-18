@@ -63,13 +63,16 @@ class U200BleLastUnlock(CoordinatorEntity[U200BleCoordinator], SensorEntity):
     #: ...) falls back to its EVENT_CLASS instead -- see client.py's
     #: LastUnlockEvent / async_read_last_unlock_event. Union of both value
     #: sets covers every label this sensor can ever actually report -- PLUS
-    #: "face" (2026-09-07, confirmed live): aqara_ble.access_log's
-    #: decode_lock_log_record() special-cases attr-hi 0x2 into "face" when
-    #: userId[4:8] != "0680" (0680 == fingerprint instead), a string that
-    #: deliberately does NOT appear in METHOD_BY_HI's own values() -- so it
-    #: must be added here by hand or native_value() below silently nulls out
-    #: every face-unlock entry (looked like the BLE read itself was failing;
-    #: it wasn't -- only this enum-options list was incomplete).
+    #: "face": aqara_ble.access_log's decode_lock_log_record() special-cases
+    #: attr-hi 0x2 into "face" whenever userId[4:8] != "0680", a check that
+    #: (2026-09-18, confirmed live) never once matches on this lock, so every
+    #: real fingerprint touch used to surface here as "face" instead. client.py's
+    #: _parse_last_unlock_event() now corrects that back to "fingerprint" before
+    #: it ever reaches this sensor, so "face" is kept in this options set only
+    #: defensively (for a hypothetical future face-capable lock variant), not
+    #: because it is expected to actually appear -- and if it's ever removed,
+    #: native_value() below would silently null out such an entry instead of
+    #: raising, which is why it stays.
     _attr_options = sorted(
         set(METHOD_BY_HI.values()) | set(EVENT_CLASS.values()) | {"face"}
     )
