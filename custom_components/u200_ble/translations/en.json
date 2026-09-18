@@ -1,0 +1,86 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up U200 BLE",
+        "description": "Access-log data only, over Bluetooth. No lock control, no battery, no settings — configure those in your Matter integration instead.",
+        "data": {
+          "address": "Bluetooth address",
+          "device_id": "Aqara device ID (optional — only needed if automatic detection fails, e.g. several devices on the account; find it by leaving this blank first)",
+          "region": "Aqara region",
+          "district": "Account country/district (e.g. DE, ES, KR — must match the country your Aqara account is registered in)",
+          "account": "Aqara account (email or phone)",
+          "password": "Aqara password",
+          "guard_code": "Guard code (only if Aqara asked you for one, e.g. after a new-device login)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate Aqara account",
+        "description": "Enter your Aqara account and password.",
+        "data": {
+          "account": "Aqara account (email or phone)",
+          "password": "Aqara password",
+          "guard_code": "Guard code (only if Aqara asked you for one, e.g. after a new-device login)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Aqara rejected these credentials.",
+      "cannot_connect": "Could not validate the credentials with Aqara Cloud.",
+      "no_device": "No Aqara lock could be found on this account for this device."
+    },
+    "abort": {
+      "already_configured": "This lock is already configured.",
+      "reauth_successful": "Aqara credentials were updated successfully."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "last_unlock": {
+        "name": "Last access-log event",
+        "state": {
+          "NFC": "NFC",
+          "ble": "Bluetooth",
+          "face": "Face recognition",
+          "fingerprint": "Fingerprint",
+          "homekit": "HomeKit",
+          "key": "Key",
+          "lock_event": "Locked",
+          "matter": "Matter",
+          "password": "Password",
+          "temp_password": "Temporary password"
+        }
+      },
+      "last_unlock_person": {
+        "name": "Last access-log person"
+      },
+      "last_unlock_time": {
+        "name": "Last access-log time"
+      },
+      "user_table": {
+        "name": "Credential table"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Refresh over Bluetooth"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "U200 BLE options",
+        "description": "How often to connect over Bluetooth and read the access log. Every read costs a little lock battery and, on a shared Bluetooth proxy (e.g. ESPHome), a connection slot.",
+        "data": {
+          "poll_minutes": "Poll every N minutes",
+          "credential_names_text": "Name mapping (one per line: <slot number>: <name> -- the slot number is the \"credential_slot\" attribute shown on the \"Last access-log event\"/\"Last access-log person\" sensors; blank lines and lines starting with # are ignored)",
+          "trigger_lock_entity": "Trigger lock entity (optional) -- pick another integration's lock.* entity (e.g. your Matter integration) for this SAME physical lock. When it turns \"unlocked\", an access-log read is triggered right away instead of waiting for the next regular poll cycle."
+        }
+      }
+    },
+    "error": {
+      "invalid_credential_names": "Could not parse the name mapping -- check the \"<slot>: <name>\" format, one per line."
+    }
+  }
+}

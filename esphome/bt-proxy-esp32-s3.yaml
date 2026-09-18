@@ -1,0 +1,59 @@
+# ESPHome Bluetooth Proxy config -- ESP32-S3 boards (e.g. ESP32-S3-DevKitC-1,
+# generic S3 dev boards).
+#
+# Notes specific to this board:
+#   - `board: esp32-s3-devkitc-1` is the generic S3 devkit profile and works
+#     for most plain S3 dev boards. If your specific board doesn't come up in
+#     ESPHome (or fails to flash), check https://esphome.io/components/esp32.html
+#     for the exact board id, or fall back to a generic one there.
+#   - If your S3 board has PSRAM (many do, often labelled "N16R8"/"N8R8" etc.
+#     on the module), you can optionally add a `psram:` block -- not required
+#     just for Bluetooth proxy duty, so it's left out here to keep this generic.
+#   - esp-idf is used here for the same reason as on the C3: more stable BLE
+#     behaviour than the arduino framework, and it's the framework ESPHome
+#     itself is moving towards by default.
+#
+# Before flashing:
+#   1. Fill in your Wi-Fi credentials below (or better: use secrets.yaml, see
+#      https://esphome.io/guides/faq.html#tips-for-secrets-yaml).
+#   2. Generate a fresh API encryption key: run `esphome wizard` once, or
+#      generate 32 random bytes and base64-encode them yourself, and paste the
+#      result in place of the placeholder below. Never reuse the example key.
+#   3. Pick your own OTA password, replacing the placeholder.
+
+esphome:
+  name: bt-proxy-esp32-s3
+  friendly_name: "BT Proxy ESP32-S3"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: esp32s3
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: "REPLACE_ME_WITH_YOUR_OWN_BASE64_API_KEY=="
+
+ota:
+  - platform: esphome
+    password: "replace_me_with_your_own_ota_password"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  ap:
+    ssid: "Bt-Proxy-S3 Fallback Hotspot"
+    password: "replace_me_with_your_own_fallback_password"
+
+captive_portal:
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: true
+
+bluetooth_proxy:
+  active: true

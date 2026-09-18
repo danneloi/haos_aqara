@@ -1,0 +1,86 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "U200 BLE einrichten",
+        "description": "Nur Zugangsprotokoll-Daten, über Bluetooth. Keine Schlosssteuerung, kein Akkustand, keine Einstellungen -- das läuft über deine Matter-Integration.",
+        "data": {
+          "address": "Bluetooth-Adresse",
+          "device_id": "Aqara-Geräte-ID (optional -- nur nötig, wenn die automatische Erkennung fehlschlägt, z. B. bei mehreren Geräten im Account; zum Ermitteln zunächst leer lassen)",
+          "region": "Aqara-Region",
+          "district": "Land/Distrikt des Accounts (z. B. DE, ES, KR -- muss zum Land passen, in dem dein Aqara-Account registriert ist)",
+          "account": "Aqara-Account (E-Mail oder Telefonnummer)",
+          "password": "Aqara-Passwort",
+          "guard_code": "Guard-Code (nur falls Aqara danach gefragt hat, z. B. nach einem Login von einem neuen Gerät)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Aqara-Account erneut authentifizieren",
+        "description": "Aqara-Account und Passwort eingeben.",
+        "data": {
+          "account": "Aqara-Account (E-Mail oder Telefonnummer)",
+          "password": "Aqara-Passwort",
+          "guard_code": "Guard-Code (nur falls Aqara danach gefragt hat, z. B. nach einem Login von einem neuen Gerät)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Aqara hat diese Zugangsdaten abgelehnt.",
+      "cannot_connect": "Die Zugangsdaten konnten nicht bei Aqara Cloud überprüft werden.",
+      "no_device": "Für dieses Gerät wurde in diesem Account kein Aqara-Schloss gefunden."
+    },
+    "abort": {
+      "already_configured": "Dieses Schloss ist bereits eingerichtet.",
+      "reauth_successful": "Die Aqara-Zugangsdaten wurden erfolgreich aktualisiert."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "last_unlock": {
+        "name": "Letztes Zugangsprotokoll-Ereignis",
+        "state": {
+          "NFC": "NFC",
+          "ble": "Bluetooth",
+          "face": "Gesichtserkennung",
+          "fingerprint": "Fingerabdruck",
+          "homekit": "HomeKit",
+          "key": "Schlüssel",
+          "lock_event": "Verriegelt",
+          "matter": "Matter",
+          "password": "Passwort",
+          "temp_password": "Temporäres Passwort"
+        }
+      },
+      "last_unlock_person": {
+        "name": "Letzte Zugangsprotokoll-Person"
+      },
+      "last_unlock_time": {
+        "name": "Letzte Zugangsprotokoll-Zeit"
+      },
+      "user_table": {
+        "name": "Zugangsdaten-Tabelle"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Über Bluetooth aktualisieren"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "U200 BLE Optionen",
+        "description": "Wie oft über Bluetooth verbunden und das Zugangsprotokoll gelesen wird. Jeder Lesevorgang kostet etwas Akku am Schloss und, bei einem gemeinsam genutzten Bluetooth-Proxy (z. B. ESPHome), einen Verbindungsplatz.",
+        "data": {
+          "poll_minutes": "Alle N Minuten abfragen",
+          "credential_names_text": "Namenszuordnung (eine Zeile pro Eintrag: <Slot-Nummer>: <Name> -- die Slot-Nummer ist das Attribut \"credential_slot\" der Sensoren \"Last access-log event\"/\"Last access-log person\"; Leerzeilen und Zeilen mit # werden ignoriert)",
+          "trigger_lock_entity": "Auslösendes Schloss (optional) -- wähle die lock.*-Entität einer ANDEREN Integration (z. B. deiner Matter-Integration) für DIESES SELBE Schloss. Sobald sie auf \"entsperrt\" wechselt, wird sofort ein Zugangsprotokoll-Lesevorgang ausgelöst, statt auf den nächsten regulären Abfragezyklus zu warten."
+        }
+      }
+    },
+    "error": {
+      "invalid_credential_names": "Die Namenszuordnung konnte nicht gelesen werden -- Format \"<Slot>: <Name>\", eine Zeile pro Eintrag."
+    }
+  }
+}

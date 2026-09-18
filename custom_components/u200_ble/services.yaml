@@ -1,0 +1,28 @@
+fetch_ltmk:
+  name: LTMK abrufen (Offline-BLE-Sitzung aktivieren)
+  description: >-
+    Ruft einmalig den LTMK (Long-Term Master Key) dieses Schlosses von der
+    Aqara-Cloud ab und aktiviert damit die Offline-BLE-Sitzung (kein
+    Cloud-Login-Roundtrip mehr bei jedem Lesevorgang). Der Guard-Code ist nur
+    ca. 30 Sekunden gueltig -- Code in der Aqara-App anzeigen lassen und
+    diesen Service SOFORT danach aufrufen.
+  fields:
+    guard_code:
+      name: Guard-Code
+      description: >-
+        Der kurzlebige (~30s) Bestaetigungscode aus der Aqara-App
+        (Konto/Sicherheit -> Guard-Code o.ae.).
+      required: true
+      example: "123456"
+      selector:
+        text:
+    config_entry_id:
+      name: Config-Entry-ID (nur bei mehreren Schloessern noetig)
+      description: >-
+        Nur angeben, wenn mehr als ein U200-BLE-Schloss konfiguriert ist.
+        Steht in der URL der Integrationsseite (Einstellungen -> Geraete &
+        Dienste -> U200 BLE -> dieses Schloss).
+      required: false
+      example: "01JXXXXXXXXXXXXXXXXXXXXXXX"
+      selector:
+        text:

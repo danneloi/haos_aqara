@@ -1,0 +1,56 @@
+# ESPHome Bluetooth Proxy config -- classic ESP32 (e.g. ESP32-DevKitC, NodeMCU-32S,
+# WROOM-32 dev boards). Flash this onto the board with `esphome run bt-proxy-esp32.yaml`
+# (USB cable, first flash) or over-the-air afterwards.
+#
+# Purpose in this setup: this ESPHome device is NOT running the lock integration
+# itself. It just gives Home Assistant a Bluetooth "ear" close to the Aqara U200
+# lock -- the U200 BLE integration then talks to the lock over BLE through this
+# proxy. Place the board within normal BLE range of the lock (a few meters,
+# depending on walls/interference).
+#
+# Before flashing:
+#   1. Fill in your Wi-Fi credentials below  or better: use secrets.yaml, see
+#      https://esphome.io/guides/faq.html#tips-for-secrets-yaml).
+#   2. Generate a fresh API encryption key: run `esphome wizard` once, or
+#      generate 32 random bytes and base64-encode them yourself, and paste the
+#      result in place of the placeholder below. Never reuse the example key.
+#   3. Pick your own OTA password, replacing the placeholder.
+
+esphome:
+  name: bt-proxy-esp32
+  friendly_name: "BT Proxy ESP32"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf   # esp-idf gives more stable/performant BLE than the arduino framework
+
+# Enable logging (shows up in Home Assistant's ESPHome logs and via USB serial)
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "REPLACE_ME_WITH_YOUR_OWN_BASE64_API_KEY=="
+
+ota:
+  - platform: esphome
+    password: "replace_me_with_your_own_ota_password"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Fallback hotspot in case Wi-Fi fails, so you can still reach/reconfigure the device
+  ap:
+    ssid: "Bt-Proxy-Esp32 Fallback Hotspot"
+    password: "replace_me_with_your_own_fallback_password"
+
+captive_portal:
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: true
+
+bluetooth_proxy:
+  active: true
